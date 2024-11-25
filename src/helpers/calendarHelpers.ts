@@ -57,7 +57,7 @@ export const getMonthCalendar = (
       monthCalendar.weeks[week].push({
         number: i,
         date: new Date(year, month - 1, i),
-        inMonth: i <= lastOfCurrentMonth.getDay(),
+        inMonth: true,
       });
     }
     monday += 7;
