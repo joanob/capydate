@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getMonthCalendar } from "../helpers/calendarHelpers";
@@ -69,9 +69,58 @@ const CalendarScreen = () => {
             </View>
           );
         })}
+        <View style={styles.dayContainer}>
+          <View style={styles.day}>
+            <Text style={styles.dayText}>6 noviembre</Text>
+            <View style={styles.dayTasks}>
+              <View style={styles.task}>
+                <View style={styles.taskTop}>
+                  <View style={styles.taskCategory}></View>
+                  <View style={styles.taskOptions}></View>
+                </View>
+                <View style={styles.taskDetails}>
+                  <View style={styles.taskDoneContainer}>
+                    <Pressable style={styles.taskDone}></Pressable>
+                  </View>
+                  <View style={styles.taskTextContainer}>
+                    <Text style={styles.taskText}>
+                      Entregar tarea de música
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <View style={styles.task}>
+                <View style={styles.taskTop}>
+                  <View style={styles.taskCategory}></View>
+                  <View style={styles.taskOptions}></View>
+                </View>
+                <View style={styles.taskDetails}>
+                  <View style={styles.taskDoneContainer}>
+                    <View style={styles.taskDone}></View>
+                  </View>
+                  <View style={styles.taskTextContainer}>
+                    <Text style={styles.taskText}>Cumpleaños Bea</Text>
+                  </View>
+                </View>
+              </View>
+              <View style={styles.task}>
+                <View style={styles.taskTop}>
+                  <View style={styles.taskCategory}></View>
+                  <View style={styles.taskOptions}></View>
+                </View>
+                <View style={styles.taskDetails}>
+                  <View style={styles.taskDoneContainer}>
+                    <View style={styles.taskDone}></View>
+                  </View>
+                  <View style={styles.taskTextContainer}>
+                    <Text style={styles.taskText}>Comprar leche</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
       </View>
-      <View style={styles.day}></View>
-      <View style={styles.tasks}></View>
     </SafeAreaView>
   );
 };
