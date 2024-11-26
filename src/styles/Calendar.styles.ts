@@ -76,6 +76,12 @@ export const CalendarStyles = StyleSheet.create({
   weekDay: {
     flex: 1,
   },
+  weekDayToday: {
+    backgroundColor: "#eee",
+  },
+  weekDaySelected: {
+    backgroundColor: "#ffc8dd",
+  },
   weekDayText: {
     textAlign: "center",
     fontSize: 12,

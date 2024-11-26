@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, StyleProp, ViewStyle } from "react-native";
 import React, {
   useCallback,
   useEffect,
@@ -27,11 +27,13 @@ const monthTexts = [
 ];
 
 const CalendarScreen = () => {
-  const [year, setYear] = useState(new Date().getFullYear());
-  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const today = new Date();
+  const [year, setYear] = useState(today.getFullYear());
+  const [month, setMonth] = useState(today.getMonth() + 1);
   const [monthCalendar, setMonthCalendar] = useState<MonthCalendar | null>(
     null
   );
+  const [selectedDay, setSelectedDay] = useState(today.getDate());
 
   useEffect(() => {
     setMonthCalendar(getMonthCalendar(year, month));
@@ -47,6 +49,20 @@ const CalendarScreen = () => {
       setMonth(1);
     } else {
       setMonth(newMonth);
+    }
+  };
+
+  const selectDay = (date: Date) => {
+    if (month === date.getMonth() + 1 && year === date.getFullYear()) {
+      setSelectedDay(date.getDate());
+    } else {
+      const firstOfMonth = new Date(year, month, 1);
+      if (date.getTime() < firstOfMonth.getTime()) {
+        changeMonth(-1);
+      } else {
+        changeMonth(1);
+      }
+      setSelectedDay(date.getDate());
     }
   };
 
@@ -111,8 +127,26 @@ const CalendarScreen = () => {
                 <Text style={styles.weekInfoText}>40</Text>
               </View>
               {week.map((day) => {
+                let viewStyle: StyleProp<ViewStyle> = styles.weekDay;
+
+                if (selectedDay === day.number && day.inMonth) {
+                  viewStyle = { ...styles.weekDay, ...styles.weekDaySelected };
+                } else if (
+                  day.number === today.getDate() &&
+                  month === today.getMonth() + 1 &&
+                  year === today.getFullYear()
+                ) {
+                  viewStyle = { ...styles.weekDay, ...styles.weekDayToday };
+                }
+
                 return (
-                  <View key={day.date.getTime()} style={styles.weekDay}>
+                  <Pressable
+                    key={day.date.getTime()}
+                    style={viewStyle}
+                    onPress={() => {
+                      selectDay(day.date);
+                    }}
+                  >
                     <Text
                       style={
                         day.inMonth
@@ -122,7 +156,7 @@ const CalendarScreen = () => {
                     >
                       {day.number}
                     </Text>
-                  </View>
+                  </Pressable>
                 );
               })}
             </View>
