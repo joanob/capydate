@@ -31,12 +31,23 @@ export const CalendarStyles = StyleSheet.create({
     borderRadius: 50,
   },
   monthName: {
+    width: "100%",
     paddingVertical: 10,
     flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center",
   },
+  monthNavContainer: {
+    marginHorizontal: 20,
+    alignItems: "center",
+  },
+  monthNav: {
+    width: 24,
+    height: 24,
+    backgroundColor: "#eee",
+  },
   monthNameText: {
-    width: "100%",
+    width: 200,
     textAlign: "center",
     fontSize: 24,
     fontWeight: "bold",

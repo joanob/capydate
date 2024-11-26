@@ -1,11 +1,54 @@
 import { View, Text, Pressable } from "react-native";
-import React from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useInsertionEffect,
+  useState,
+} from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getMonthCalendar } from "../helpers/calendarHelpers";
 import { CalendarStyles as styles } from "../styles/Calendar.styles";
+import { MonthCalendar } from "../types/MonthCalendar";
+
+const monthTexts = [
+  "",
+  "Enero",
+  "Febrero",
+  "Marzo",
+  "Abril",
+  "Mayo",
+  "Junio",
+  "Julio",
+  "Agosto",
+  "Septiembre",
+  "Octubre",
+  "Noviembre",
+  "Diciembre",
+];
 
 const CalendarScreen = () => {
-  const month = getMonthCalendar(2024, 11);
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [monthCalendar, setMonthCalendar] = useState<MonthCalendar | null>(
+    null
+  );
+
+  useEffect(() => {
+    setMonthCalendar(getMonthCalendar(year, month));
+  }, [year, month]);
+
+  const changeMonth = (nav: number) => {
+    const newMonth = month + nav;
+    if (newMonth <= 0) {
+      setYear(year - 1);
+      setMonth(12);
+    } else if (newMonth >= 13) {
+      setYear(year + 1);
+      setMonth(1);
+    } else {
+      setMonth(newMonth);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -15,9 +58,25 @@ const CalendarScreen = () => {
       </View>
       <View style={styles.calendar}>
         <View style={styles.monthName}>
+          <View style={styles.monthNavContainer}>
+            <Pressable
+              style={styles.monthNav}
+              onPress={() => {
+                changeMonth(-1);
+              }}
+            ></Pressable>
+          </View>
           <Text style={styles.monthNameText}>
-            Noviembre <Text style={styles.yearText}>2024</Text>
+            {monthTexts[month]} <Text style={styles.yearText}>{year}</Text>
           </Text>
+          <View style={styles.monthNavContainer}>
+            <Pressable
+              style={styles.monthNav}
+              onPress={() => {
+                changeMonth(1);
+              }}
+            ></Pressable>
+          </View>
         </View>
         <View style={styles.week}>
           <View style={styles.weekInfo}>
@@ -45,7 +104,7 @@ const CalendarScreen = () => {
             <Text style={styles.weekDayText}>Dom</Text>
           </View>
         </View>
-        {month.weeks.map((week, i) => {
+        {monthCalendar?.weeks.map((week, i) => {
           return (
             <View key={i} style={styles.week}>
               <View style={styles.weekInfo}>

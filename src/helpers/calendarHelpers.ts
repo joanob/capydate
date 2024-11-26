@@ -1,10 +1,4 @@
-interface MonthCalendar {
-  weeks: {
-    number: number;
-    date: Date;
-    inMonth: boolean;
-  }[][];
-}
+import { MonthCalendar } from "../types/MonthCalendar";
 
 export const getMonthCalendar = (
   year: number,
