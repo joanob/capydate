@@ -12,9 +12,9 @@ export const getMonthCalendar = (
   let week: number = 0;
   let monthComplete: boolean = false;
 
-  const firstOfMonth = new Date(year, month - 1, 1);
-  const lastOfPreviousMonth = new Date(year, month - 1, 0);
-  const lastOfCurrentMonth = new Date(year, month, 0);
+  const firstOfMonth = new Date(year, month, 1);
+  const lastOfPreviousMonth = new Date(year, month, 0);
+  const lastOfCurrentMonth = new Date(year, month + 1, 0);
 
   monthCalendar.weeks.push([]);
 
@@ -23,7 +23,7 @@ export const getMonthCalendar = (
     for (let i = 1; i <= 7; i++) {
       monthCalendar.weeks[week].push({
         number: i,
-        date: new Date(year, month - 1, i),
+        date: new Date(year, month, i),
         inMonth: true,
       });
     }
@@ -36,7 +36,7 @@ export const getMonthCalendar = (
           i > lastOfPreviousMonth.getDate()
             ? i - lastOfPreviousMonth.getDate()
             : i,
-        date: new Date(year, month - 2, i),
+        date: new Date(year, month - 1, i),
         inMonth: i > lastOfPreviousMonth.getDate(),
       });
     }
@@ -50,7 +50,7 @@ export const getMonthCalendar = (
     for (let i = monday; i < monday + 7; i++) {
       monthCalendar.weeks[week].push({
         number: i,
-        date: new Date(year, month - 1, i),
+        date: new Date(year, month, i),
         inMonth: true,
       });
     }
@@ -71,7 +71,7 @@ export const getMonthCalendar = (
           monday + i > lastOfCurrentMonth.getDate()
             ? monday + i - lastOfCurrentMonth.getDate()
             : monday + i,
-        date: new Date(year, month - 1, monday + i),
+        date: new Date(year, month, monday + i),
         inMonth: lastOfCurrentMonth.getDate() - monday - i >= 0,
       });
     }

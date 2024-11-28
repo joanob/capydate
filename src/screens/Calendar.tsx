@@ -1,17 +1,12 @@
 import { View, Text, Pressable, StyleProp, ViewStyle } from "react-native";
-import React, {
-  useCallback,
-  useEffect,
-  useInsertionEffect,
-  useState,
-} from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getMonthCalendar } from "../helpers/calendarHelpers";
 import { CalendarStyles as styles } from "../styles/Calendar.styles";
 import { MonthCalendar } from "../types/MonthCalendar";
+import { useAppStore } from "../data";
 
 const monthTexts = [
-  "",
   "Enero",
   "Febrero",
   "Marzo",
@@ -28,41 +23,49 @@ const monthTexts = [
 
 const CalendarScreen = () => {
   const today = new Date();
-  const [year, setYear] = useState(today.getFullYear());
-  const [month, setMonth] = useState(today.getMonth() + 1);
+  const {
+    selectedDate,
+    selectedMonth,
+    selectedYear,
+    selectDate,
+    selectMonth,
+    selectYear,
+  } = useAppStore();
   const [monthCalendar, setMonthCalendar] = useState<MonthCalendar | null>(
     null
   );
-  const [selectedDay, setSelectedDay] = useState(today.getDate());
 
   useEffect(() => {
-    setMonthCalendar(getMonthCalendar(year, month));
-  }, [year, month]);
+    setMonthCalendar(getMonthCalendar(selectedYear, selectedMonth));
+  }, [selectedYear, selectedMonth]);
 
   const changeMonth = (nav: number) => {
-    const newMonth = month + nav;
+    const newMonth = selectedMonth + nav;
     if (newMonth <= 0) {
-      setYear(year - 1);
-      setMonth(12);
+      selectYear(selectedYear - 1);
+      selectMonth(11);
     } else if (newMonth >= 13) {
-      setYear(year + 1);
-      setMonth(1);
+      selectYear(selectedYear + 1);
+      selectMonth(0);
     } else {
-      setMonth(newMonth);
+      selectMonth(newMonth);
     }
   };
 
   const selectDay = (date: Date) => {
-    if (month === date.getMonth() + 1 && year === date.getFullYear()) {
-      setSelectedDay(date.getDate());
+    if (
+      selectedMonth === date.getMonth() &&
+      selectedYear === date.getFullYear()
+    ) {
+      selectDate(date.getDate());
     } else {
-      const firstOfMonth = new Date(year, month, 1);
+      const firstOfMonth = new Date(selectedYear, selectedMonth, 1);
       if (date.getTime() < firstOfMonth.getTime()) {
         changeMonth(-1);
       } else {
         changeMonth(1);
       }
-      setSelectedDay(date.getDate());
+      selectDate(date.getDate());
     }
   };
 
@@ -83,7 +86,8 @@ const CalendarScreen = () => {
             ></Pressable>
           </View>
           <Text style={styles.monthNameText}>
-            {monthTexts[month]} <Text style={styles.yearText}>{year}</Text>
+            {monthTexts[selectedMonth]}{" "}
+            <Text style={styles.yearText}>{selectedYear}</Text>
           </Text>
           <View style={styles.monthNavContainer}>
             <Pressable
@@ -128,13 +132,13 @@ const CalendarScreen = () => {
               </View>
               {week.map((day) => {
                 let viewStyle: StyleProp<ViewStyle> = styles.weekDay;
-
-                if (selectedDay === day.number && day.inMonth) {
+                if (selectedDate === day.number && day.inMonth) {
                   viewStyle = { ...styles.weekDay, ...styles.weekDaySelected };
                 } else if (
                   day.number === today.getDate() &&
-                  month === today.getMonth() + 1 &&
-                  year === today.getFullYear()
+                  selectedMonth === today.getMonth() &&
+                  selectedYear === today.getFullYear() &&
+                  day.inMonth
                 ) {
                   viewStyle = { ...styles.weekDay, ...styles.weekDayToday };
                 }

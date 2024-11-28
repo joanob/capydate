@@ -1,7 +1,11 @@
 import { StateCreator } from "zustand";
+import { TaskSlice } from "./tasks";
+import { AppStateSlice } from "./appState";
+
+export type Store = TaskSlice & AppStateSlice;
 
 export type ImmerStateCreator<T> = StateCreator<
-  T,
+  Store,
   [["zustand/immer", never], never],
   [],
   T
