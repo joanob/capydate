@@ -101,11 +101,20 @@ export const CalendarStyles = StyleSheet.create({
     backgroundColor: "#5f0f40",
     paddingHorizontal: 10,
   },
+  dayHeader: {
+    flexDirection: "row",
+    padding: 20,
+    alignItems: "center",
+  },
   dayText: {
     color: "#fff",
-    padding: 20,
-    paddingTop: 30,
     fontSize: 20,
+    flex: 1,
+  },
+  addTask: {
+    width: 30,
+    height: 30,
+    backgroundColor: "#000",
   },
   dayTasks: {},
   task: {
@@ -145,6 +154,9 @@ export const CalendarStyles = StyleSheet.create({
   },
   taskTextContainer: {},
   taskText: {
+    fontSize: 16,
+  },
+  taskTextInput: {
     fontSize: 16,
   },
 });

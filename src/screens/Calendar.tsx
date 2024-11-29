@@ -1,4 +1,11 @@
-import { View, Text, Pressable, StyleProp, ViewStyle } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  StyleProp,
+  ViewStyle,
+  TextInput,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getMonthCalendar } from "../helpers/calendarHelpers";
@@ -34,6 +41,8 @@ const CalendarScreen = () => {
   const [monthCalendar, setMonthCalendar] = useState<MonthCalendar | null>(
     null
   );
+  const { tasks, addTask } = useAppStore();
+  const [newTask, setNewTask] = useState<Task | null>(null);
 
   useEffect(() => {
     setMonthCalendar(getMonthCalendar(selectedYear, selectedMonth));
@@ -50,6 +59,7 @@ const CalendarScreen = () => {
     } else {
       selectMonth(newMonth);
     }
+    setNewTask(null);
   };
 
   const selectDay = (date: Date) => {
@@ -67,6 +77,7 @@ const CalendarScreen = () => {
       }
       selectDate(date.getDate());
     }
+    setNewTask(null);
   };
 
   return (
@@ -168,52 +179,89 @@ const CalendarScreen = () => {
         })}
         <View style={styles.dayContainer}>
           <View style={styles.day}>
-            <Text style={styles.dayText}>6 noviembre</Text>
+            <View style={styles.dayHeader}>
+              <Text style={styles.dayText}>
+                {selectedDate} {monthTexts[selectedMonth].toLowerCase()}
+              </Text>
+              {newTask === null ? (
+                <Pressable
+                  onPress={() => {
+                    setNewTask({
+                      id: 0,
+                      date: new Date(selectedYear, selectedMonth, selectedDate),
+                      isComplete: false,
+                      text: "",
+                    });
+                  }}
+                  style={styles.addTask}
+                ></Pressable>
+              ) : newTask.text === "" ? (
+                <Pressable
+                  onPress={() => {
+                    setNewTask(null);
+                  }}
+                  style={styles.addTask}
+                ></Pressable>
+              ) : (
+                <Pressable
+                  onPress={() => {
+                    addTask(newTask);
+                    setNewTask(null);
+                  }}
+                  style={styles.addTask}
+                ></Pressable>
+              )}
+            </View>
             <View style={styles.dayTasks}>
-              <View style={styles.task}>
-                <View style={styles.taskTop}>
-                  <View style={styles.taskCategory}></View>
-                  <View style={styles.taskOptions}></View>
-                </View>
-                <View style={styles.taskDetails}>
-                  <View style={styles.taskDoneContainer}>
-                    <Pressable style={styles.taskDone}></Pressable>
+              {newTask ? (
+                <View style={styles.task}>
+                  <View style={styles.taskTop}>
+                    <View style={styles.taskCategory}></View>
+                    <View style={styles.taskOptions}></View>
                   </View>
-                  <View style={styles.taskTextContainer}>
-                    <Text style={styles.taskText}>
-                      Entregar tarea de música
-                    </Text>
-                  </View>
-                </View>
-              </View>
-              <View style={styles.task}>
-                <View style={styles.taskTop}>
-                  <View style={styles.taskCategory}></View>
-                  <View style={styles.taskOptions}></View>
-                </View>
-                <View style={styles.taskDetails}>
-                  <View style={styles.taskDoneContainer}>
-                    <View style={styles.taskDone}></View>
-                  </View>
-                  <View style={styles.taskTextContainer}>
-                    <Text style={styles.taskText}>Cumpleaños Bea</Text>
+                  <View style={styles.taskDetails}>
+                    <View style={styles.taskDoneContainer}>
+                      <Pressable style={styles.taskDone}></Pressable>
+                    </View>
+                    <View style={styles.taskTextContainer}>
+                      <TextInput
+                        style={styles.taskTextInput}
+                        value={newTask.text}
+                        onChangeText={(text) => {
+                          setNewTask({ ...newTask, text: text });
+                        }}
+                        placeholder="Apunta tus tareas"
+                      />
+                    </View>
                   </View>
                 </View>
-              </View>
-              <View style={styles.task}>
-                <View style={styles.taskTop}>
-                  <View style={styles.taskCategory}></View>
-                  <View style={styles.taskOptions}></View>
-                </View>
-                <View style={styles.taskDetails}>
-                  <View style={styles.taskDoneContainer}>
-                    <View style={styles.taskDone}></View>
+              ) : null}
+              {tasks
+                .filter(
+                  (t) =>
+                    t.date.getTime() ===
+                    new Date(
+                      selectedYear,
+                      selectedMonth,
+                      selectedDate
+                    ).getTime()
+                )
+                .map((t) => (
+                  <View key={t.id} style={styles.task}>
+                    <View style={styles.taskTop}>
+                      <View style={styles.taskCategory}></View>
+                      <View style={styles.taskOptions}></View>
+                    </View>
+                    <View style={styles.taskDetails}>
+                      <View style={styles.taskDoneContainer}>
+                        <Pressable style={styles.taskDone}></Pressable>
+                      </View>
+                      <View style={styles.taskTextContainer}>
+                        <Text style={styles.taskText}>{t.text}</Text>
+                      </View>
+                    </View>
                   </View>
-                  <View style={styles.taskTextContainer}>
-                    <Text style={styles.taskText}>Comprar leche</Text>
-                  </View>
-                </View>
-              </View>
+                ))}
             </View>
           </View>
         </View>
