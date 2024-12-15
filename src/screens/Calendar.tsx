@@ -41,8 +41,12 @@ const CalendarScreen = () => {
   const [monthCalendar, setMonthCalendar] = useState<MonthCalendar | null>(
     null
   );
-  const { tasks, addTask } = useAppStore();
+  const { tasks, getTasks, addTask } = useAppStore();
   const [newTask, setNewTask] = useState<Task | null>(null);
+
+  useEffect(() => {
+    getTasks();
+  }, []);
 
   useEffect(() => {
     setMonthCalendar(getMonthCalendar(selectedYear, selectedMonth));
