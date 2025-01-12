@@ -3,6 +3,9 @@ import LoginPage from "./pages/auth/Login";
 import SignupPage from "./pages/auth/Signup";
 import { useAppStore } from "./data";
 import { useEffect } from "react";
+import CalendarPage from "./pages/tasks/Calendar";
+import DayTasksPage from "./pages/tasks/DayTasks";
+import TimeBlockingPage from "./pages/tasks/TimeBlocking";
 
 const Router = () => {
   const { isSessionChecked, user, checkSession } = useAppStore();
@@ -21,9 +24,9 @@ const Router = () => {
     return (
       <BrowserRouter>
         <Routes>
-          <Route path="/calendar" element={<SignupPage />} />
-          <Route path="/today" element={<SignupPage />} />
-          <Route path="/time-blocking" element={<SignupPage />} />
+          <Route path="/calendar" element={<CalendarPage />} />
+          <Route path="/today" element={<DayTasksPage />} />
+          <Route path="/time-blocking" element={<TimeBlockingPage />} />
         </Routes>
       </BrowserRouter>
     );

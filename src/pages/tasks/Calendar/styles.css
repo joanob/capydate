@@ -1,0 +1,11 @@
+.calendar {
+}
+
+.week {
+  display: flex;
+  flex-direction: row;
+}
+
+.day {
+  flex: 1;
+}
